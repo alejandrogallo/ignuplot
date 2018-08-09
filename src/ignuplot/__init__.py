@@ -2,6 +2,7 @@
 import logging
 
 import click
+import os
 
 import ignuplot.repl
 import ignuplot.style
@@ -13,6 +14,13 @@ __version__ = '0.1.0'
 
 @click.command()
 @click.help_option('--help', '-h')
+@click.argument(
+    'script',
+    default=None,
+    nargs=1,
+    required=False,
+    type=click.Path()
+)
 @click.version_option(version=__version__)
 @click.option(
     '--multiline/--no-multiline',
@@ -25,11 +33,16 @@ __version__ = '0.1.0'
     help='Enable vi editing mode'
 )
 @click.option(
+    '--record', '-r',
+    is_flag=True,
+    help='Append the commands typed to the input gnuplot script'
+)
+@click.option(
     '--debug',
     is_flag=True,
     help='enable debug logging'
 )
-def main(debug, vi, multiline):
+def main(script, debug, vi, multiline, record):
     """A gnuplot shell
     """
 
@@ -58,4 +71,18 @@ def main(debug, vi, multiline):
         style=style,
         completer=completer
     )
-    return repl.run()
+
+    if script is not None and os.path.exists(script):
+        with open(script) as fd:
+            text = fd.read()
+            repl.lines = [text]
+            repl.history.append_string(text)
+            repl.digest()
+
+    returncode = repl.run()
+    if record:
+        with open(script, 'a+') as fd:
+            for line in repl.lines:
+                fd.write('{0}\n'.format(line))
+
+    return returncode

@@ -51,6 +51,14 @@ class Shell:
             auto_suggest=AutoSuggestFromHistory()
         )
 
+    def digest(self):
+        stdout, stderr = gnuplot(self.lines)
+        if stdout:
+            prompt_info(stdout.decode())
+        if stderr:
+            self.lines.pop(-1)
+            prompt_error(stderr.decode())
+
     def run(self):
         while True:
             try:
@@ -64,12 +72,7 @@ class Shell:
                     enable_suspend=True
                 )
                 self.lines.append(text)
-                stdout, stderr = gnuplot(self.lines)
-                if stdout:
-                    prompt_info(stdout.decode())
-                if stderr:
-                    self.lines.pop(-1)
-                    prompt_error(stderr.decode())
+                self.digest()
             except KeyboardInterrupt:
                 pass
             except:
