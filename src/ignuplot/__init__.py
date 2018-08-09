@@ -39,11 +39,12 @@ def main(debug, vi, multiline):
         logger.setLevel(logging.DEBUG)
         logger.debug("Enabled debug output")
 
-    print('')
-    print('If you press Control-X Control-E, the prompt will open in $EDITOR.')
-    print('Auto-suggestion accept pressing right arrow.')
-    print('Auto completion using TAB')
-    print('')
+    print('''
+    If you press Control-x Control-e, the prompt will open in $EDITOR.
+    Auto-suggestion accept pressing right arrow.
+    Auto completion using TAB
+    Exit by pressing Control-d
+    ''')
 
     pathcompleter = PathCompleter(expanduser=True)
     completer = merge_completers(

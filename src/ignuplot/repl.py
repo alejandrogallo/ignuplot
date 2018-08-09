@@ -1,5 +1,5 @@
 from prompt_toolkit import PromptSession
-from prompt_toolkit.history import InMemoryHistory
+from prompt_toolkit.history import InMemoryHistory, FileHistory
 from prompt_toolkit.lexers import PygmentsLexer
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 
@@ -7,6 +7,7 @@ from pygments.lexers.graphics import GnuplotLexer
 from pygments.token import Keyword, Name, Comment, String, Error, \
      Number, Operator, Generic
 
+import os
 from ignuplot.utils import prompt_info, prompt_error
 
 
@@ -39,7 +40,9 @@ class Shell:
         self.vi_mode = vi_mode
         self.completer = completer
         self.lines = []
-        self.history = InMemoryHistory()
+        self.history = FileHistory(
+            os.path.join(os.path.expanduser('~'), '.ignuplot-history')
+        )
 
         self.session = PromptSession(
             history=self.history,
@@ -68,5 +71,7 @@ class Shell:
                     self.lines.pop(-1)
                     prompt_error(stderr.decode())
             except KeyboardInterrupt:
+                pass
+            except:
                 prompt_info('Goodbye and thanks for all the fish!')
                 return 0
