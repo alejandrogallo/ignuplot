@@ -20,7 +20,8 @@ with open('README.rst') as readme_file:
 
 requirements = [
     'Click',
-    'prompt_toolkit>=2.0.0'
+    'prompt_toolkit>=2.0.0',
+    'pygments',
 ]
 
 dev_requirements = [
