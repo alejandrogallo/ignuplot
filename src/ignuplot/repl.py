@@ -21,7 +21,7 @@ def gnuplot(lines):
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
-    for line in lines + ['quit']:
+    for line in lines + ['']:
         proc.stdin.write('{0}\n'.format(line).encode())
     return proc.communicate()
 
