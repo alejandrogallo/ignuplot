@@ -9,12 +9,13 @@ from pygments.token import Keyword, Name, Comment, String, Error, \
 
 import os
 from ignuplot.utils import prompt_info, prompt_error
+import ignuplot.config
 
 
 def gnuplot(lines):
     import subprocess
     proc = subprocess.Popen(
-        ['gnuplot', '-p'],
+        [ignuplot.config.GNUPLOT_BINARY, '-p'],
         shell=False,
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,

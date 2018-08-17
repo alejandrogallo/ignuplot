@@ -4,6 +4,7 @@ import logging
 import click
 import os
 
+import ignuplot.config
 import ignuplot.repl
 import ignuplot.style
 from ignuplot.completion import PathCompleter, gnuplot_keyword_completer
@@ -58,6 +59,13 @@ def main(script, debug, vi, multiline, record):
     Auto completion using TAB
     Exit by pressing Control-d
     ''')
+
+    config_file = os.path.expanduser('~/.ignuplotrc.py')
+    if os.path.exists(config_file):
+        logger.debug('Executinb configuration file {0}'.format(config_file))
+        with open(config_file) as fd:
+            exec(fd.read())
+    logger.debug('Using gnuplot binary in {0}'.format(ignuplot.config.GNUPLOT_BINARY))
 
     pathcompleter = PathCompleter(expanduser=True)
     completer = merge_completers(
